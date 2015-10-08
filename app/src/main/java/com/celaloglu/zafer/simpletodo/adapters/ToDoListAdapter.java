@@ -39,6 +39,8 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
         return titles.size();
     }
 
+    public void setData(List<ToDoTitle> titles){this.titles = titles;}
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView textView;
@@ -59,7 +61,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
             Toast.makeText(v.getContext(), position + "", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-            intent.putExtra("ID", titles.get(position).getId());
+            intent.putExtra("TITLE", titles.get(position));
             //intent.putExtra()
             v.getContext().startActivity(intent);
         }

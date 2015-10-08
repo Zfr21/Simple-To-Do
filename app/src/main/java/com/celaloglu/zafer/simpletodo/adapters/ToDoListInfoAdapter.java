@@ -44,6 +44,7 @@ public class ToDoListInfoAdapter extends RecyclerView.Adapter<ToDoListInfoAdapte
     public int getItemCount() {
         return toDoItems.size();
     }
+    public void setData(List<ToDoItem> items){this.toDoItems = items;}
 
     public class ViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener{
 
@@ -61,6 +62,7 @@ public class ToDoListInfoAdapter extends RecyclerView.Adapter<ToDoListInfoAdapte
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
             int position = getAdapterPosition();
+            toDoItems.get(position).setIsChecked(isChecked);
             databaseManager.changeChecked(toDoItems.get(position), isChecked);
         }
     }

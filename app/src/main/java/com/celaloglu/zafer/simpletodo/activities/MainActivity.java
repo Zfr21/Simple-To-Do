@@ -1,22 +1,29 @@
 package com.celaloglu.zafer.simpletodo.activities;
 
+
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import com.celaloglu.zafer.simpletodo.R;
 import com.celaloglu.zafer.simpletodo.adapters.ToDoListAdapter;
+import com.celaloglu.zafer.simpletodo.models.ToDoTitle;
 
 import managers.DatabaseManager;
 
 public class MainActivity extends AppCompatActivity {
 
     private DatabaseManager databaseManager;
+    private ToDoListAdapter adapter;
 
 
     @Override
@@ -26,9 +33,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        databaseManager = new DatabaseManager(this);
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-         databaseManager = new DatabaseManager(this);
-        ToDoListAdapter adapter = new ToDoListAdapter(databaseManager.getAllTitles());
+        //adapter = new ToDoListAdapter(databaseManager.getAllTitles(), databaseManager);
+        adapter = new ToDoListAdapter(databaseManager.getAllTitles());
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
@@ -69,11 +78,42 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add) {
+            showAddDialog();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showAddDialog(){
+
+        final EditText editText = new EditText(this);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        editText.setHint("Grocery List");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Add new Objective")
+                .setView(editText)
+                .setPositiveButton(getResources().getString(R.string.action_add), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String text = editText.getText().toString();
+                        ToDoTitle toDoTitle = new ToDoTitle();
+                        toDoTitle.setTitle(text);
+                        databaseManager.addTitle(toDoTitle);
+                        adapter.setData(databaseManager.getAllTitles());
+                        adapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        builder.show();
     }
 
 }
