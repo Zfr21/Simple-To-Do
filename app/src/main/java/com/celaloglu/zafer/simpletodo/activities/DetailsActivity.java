@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.celaloglu.zafer.simpletodo.R;
-import com.celaloglu.zafer.simpletodo.adapters.ToDoListInfoAdapter;
+import com.celaloglu.zafer.simpletodo.adapters.ToDoInfoListAdapter;
 import com.celaloglu.zafer.simpletodo.models.ToDoItem;
 import com.celaloglu.zafer.simpletodo.models.ToDoTitle;
 
@@ -28,7 +28,7 @@ import managers.DatabaseManager;
 public class DetailsActivity extends AppCompatActivity {
 
     private DatabaseManager databaseManager;
-    private ToDoListInfoAdapter adapter;
+    private ToDoInfoListAdapter adapter;
     private ToDoTitle toDoTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         databaseManager = new DatabaseManager(this);
         List<ToDoItem> toDoItems = databaseManager.getInfo(toDoTitle.getId());
-        adapter = new ToDoListInfoAdapter(databaseManager, toDoItems);
+        adapter = new ToDoInfoListAdapter(databaseManager, toDoItems);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());

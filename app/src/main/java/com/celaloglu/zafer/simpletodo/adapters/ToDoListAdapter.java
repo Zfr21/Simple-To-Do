@@ -14,11 +14,15 @@ import com.celaloglu.zafer.simpletodo.models.ToDoTitle;
 
 import java.util.List;
 
+import managers.DatabaseManager;
+
 public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHolder>{
 
     private List<ToDoTitle> titles;
-    public ToDoListAdapter(List<ToDoTitle> titles){
+    private DatabaseManager databaseManager;
+    public ToDoListAdapter(List<ToDoTitle> titles, DatabaseManager databaseManager){
         this.titles = titles;
+        this.databaseManager = databaseManager;
     }
 
     @Override
@@ -41,7 +45,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
 
     public void setData(List<ToDoTitle> titles){this.titles = titles;}
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         TextView textView;
         View parent;
@@ -51,6 +55,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
 
             parent = itemView.findViewById(R.id.parent);
             parent.setOnClickListener(this);
+            parent.setOnLongClickListener(this);
             textView = (TextView)itemView.findViewById(R.id.text);
         }
 
@@ -64,6 +69,15 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
             intent.putExtra("TITLE", titles.get(position));
             //intent.putExtra()
             v.getContext().startActivity(intent);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            int position = getAdapterPosition();
+            databaseManager.deleteTitle(titles.get(position).getId());
+            setData(databaseManager.getAllTitles());
+            notifyDataSetChanged();
+            return true;
         }
     }
 }

@@ -18,15 +18,15 @@ import managers.DatabaseManager;
 /**
  * Created by zafer on 6.10.15.
  */
-public class ToDoListInfoAdapter extends RecyclerView.Adapter<ToDoListInfoAdapter.ViewHolder>{
-
-    public ToDoListInfoAdapter(DatabaseManager databaseManager, List<ToDoItem> toDoItems) {
-        this.databaseManager = databaseManager;
-        this.toDoItems = toDoItems;
-    }
+public class ToDoInfoListAdapter extends RecyclerView.Adapter<ToDoInfoListAdapter.ViewHolder>{
 
     List<ToDoItem> toDoItems;
     DatabaseManager databaseManager;
+
+    public ToDoInfoListAdapter(DatabaseManager databaseManager, List<ToDoItem> toDoItems) {
+        this.databaseManager = databaseManager;
+        this.toDoItems = toDoItems;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,13 +46,16 @@ public class ToDoListInfoAdapter extends RecyclerView.Adapter<ToDoListInfoAdapte
     }
     public void setData(List<ToDoItem> items){this.toDoItems = items;}
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener, View.OnLongClickListener {
 
         private TextView message;
         private CheckBox checkBox;
+        private View parent;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            parent = itemView.findViewById(R.id.parent);
+            parent.setOnLongClickListener(this);
             message = (TextView) itemView.findViewById(R.id.text);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
             checkBox.setOnCheckedChangeListener(this);
@@ -64,6 +67,15 @@ public class ToDoListInfoAdapter extends RecyclerView.Adapter<ToDoListInfoAdapte
             int position = getAdapterPosition();
             toDoItems.get(position).setIsChecked(isChecked);
             databaseManager.changeChecked(toDoItems.get(position), isChecked);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            int position = getAdapterPosition();
+            databaseManager.deleteInfo(toDoItems.get(position));
+            setData(databaseManager.getInfo(toDoItems.get(0).getId()));
+            notifyDataSetChanged();
+            return true;
         }
     }
 }

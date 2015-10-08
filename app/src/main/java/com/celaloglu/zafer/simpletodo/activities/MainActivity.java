@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         //adapter = new ToDoListAdapter(databaseManager.getAllTitles(), databaseManager);
-        adapter = new ToDoListAdapter(databaseManager.getAllTitles());
+        adapter = new ToDoListAdapter(databaseManager.getAllTitles(), databaseManager);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
