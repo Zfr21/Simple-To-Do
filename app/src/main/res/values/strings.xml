@@ -5,4 +5,5 @@
     <string name="button_test">Click Me!</string>
     <string name="action_add">Add</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_talk">Talk</string>
 </resources>
